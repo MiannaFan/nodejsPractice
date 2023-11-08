@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function App() {
+  const baseUrl = "http://127.0.0.1:8000";
+  const [bookList, setBookList] = useState();
+  useEffect(() => {
+    getBookList();
+  }, []);
+  async function getBookList() {
+    try {
+      const res = await axios.get(`${baseUrl}/getBookList`);
+      console.log(res);
+      setBookList(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ul>
+        {bookList.map((item) => {
+          return <li key={item.id}>{item.name}</li>;
+        })}
+      </ul>
+    </>
   );
 }
 
